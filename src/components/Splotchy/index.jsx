@@ -1,25 +1,75 @@
 import React from 'react';
 import styles from './styles.module.css';
 
-export default function Splotchy() {
-    let x = 0;
-    let y = 0;
+const WIDTH = 200;
+const HEIGHT = 100;
 
-   const [state, setState] = React.useState({
-        x: 0,
-        y: 0
-    });
+export default function Splotchy() {
+    const circles = {
+        'a': {
+            x: Math.random() * WIDTH,
+            y: Math.random() * HEIGHT,
+            r: 25
+        },
+        'b': {
+            x: Math.random() * WIDTH,
+            y: Math.random() * HEIGHT,
+            r: 25
+        },
+        'c': {
+            x: Math.random() * WIDTH,
+            y: Math.random() * HEIGHT,
+            r: 25
+        }
+    };
+
+    const [state, setState] = React.useState([
+        {
+            x: circles.a.x,
+            y: circles.a.y,
+            r: circles.a.r
+        }, {
+            x: circles.b.x,
+            y: circles.b.y,
+            r: circles.b.r
+        }, {
+            x: circles.c.x,
+            y: circles.c.y,
+            r: circles.c.r
+        }
+    ]);
 
     const requestRef = React.useRef()
 
     const animate = time => {
-        x += 0.01;
-        y += 0.01;
+        circles.a.x += 0.01;
+        circles.a.y += 0.01;
+        circles.a.r += 0.01;
+
+        circles.b.x += 0.01;
+        circles.b.y += 0.01;
+        circles.b.r += 0.01;
+
+        circles.c.x += 0.01;
+        circles.c.y += 0.01;
+        circles.c.r += 0.01;
+
         requestRef.current = requestAnimationFrame(animate);
-        setState({
-            x: x,
-            y: y
-        });
+        setState([
+            {
+                x: circles.a.x,
+                y: circles.a.y,
+                r: 15 + (Math.sin(circles.a.r) + 1) * 11
+            }, {
+                x: circles.b.x,
+                y: circles.b.y,
+                r: 15 + (Math.sin(circles.b.r) + 1) * 5
+            }, {
+                x: circles.c.x,
+                y: circles.c.y,
+                r: 10 + (Math.sin(circles.c.r) + 1) * 15
+            }
+        ]);
     }
 
     React.useEffect(() => {
@@ -31,7 +81,7 @@ export default function Splotchy() {
      <svg
         width="100%"
         height="100%"
-        viewBox="0 0 200 200"
+        viewBox={`0 0 ${ WIDTH } ${ HEIGHT }`}
         version="1.1"
         xmlns="http://www.w3.org/2000/svg">
         <defs id="defs2">
@@ -57,28 +107,14 @@ export default function Splotchy() {
             </feComponentTransfer>
         </filter>
      </defs>
-    <g style={{ filter: 'url(#filter1012)' }}>
-        <ellipse
-            className={styles.blob}
-            id="path868"
-            cx="96.039635"
-            cy="101.40961"
-            rx="40.91238"
-            ry="37.194714" />
-        <circle
-            className={styles.blob}
-            id="circle892"
-            cx="-18.381773"
-            cy="129.08554"
-            r="50" />
-        <circle
-            className={styles.blob}
-            id="circle992"
-            cx="12.598749"
-            cy="5.5765066"
-            r="50"
-            transform={'translate(' + state.x + ',' + state.y + ')'}
-            />
+        <g style={{ filter: 'url(#filter1012)' }}>
+            { state.map((circle) => {
+                return <circle
+                    className={styles.blob}
+                    cx={ circle.x }
+                    cy={ circle.y }
+                    r={ circle.r } />
+            }) }
         </g>
     </svg>
     );
