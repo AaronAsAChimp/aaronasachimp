@@ -1,0 +1,222 @@
+# Optimizing images
+
+export const ImageCompare = ({children}) => (
+  <div
+    style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)'
+    }}>
+    {children}
+  </div>
+);
+
+export const ComparisonImage = ({alt, image, size, dim, pixelated}) => (
+	<figure style={{
+		display: 'flex',
+		flexDirection: 'column', 
+		alignItems: 'center'
+	}}>
+		<img alt={alt} src={image} style={{
+			width: dim ? dim + 'px' : null,
+			imageRendering: pixelated ? 'pixelated' : null
+		}} />
+		<figcaption>{alt + ' (' + size + ')'}</figcaption>
+	</figure>
+);
+
+export const ComparisonSvg = ({alt, image, size, dim}) => (
+	<figure style={{
+		display: 'flex',
+		flexDirection: 'column', 
+		alignItems: 'center'
+	}}>
+		{image}
+		<figcaption>{alt + ' (' + size + ')'}</figcaption>
+	</figure>
+);
+
+<!--
+- Consider the image content
+	- Images with a lot of noise will not compress as well as images without noise.
+		- If your image is noisy, use the denoising filter in your favorite image editor.
+	- Some colors compress better than others.
+		- True black (hex code #000000) compresses the best.
+		- Try using different colors in your images to see which are best.
+	- Images with fewer colors compress better than images with more colors.
+		- Use the posterize filter in your favorite image editor to reduce the colors. Even subtle amounts of posterization will have a measurable impact.
+		- If you want to take it a step further consider using indexed mode. If your image has fewer that 256 total colors you may not even notice a difference.
+	- Image size is a factor
+		- Scale images to only be as big as necessary.
+		- Images that are long compress better than images that are tall.
+- Use the correct file type
+	- When possible use a state-of-the-art file format. JPEG XL or AVIF will provide much better compression than their traditional counterparts.
+	- If your favorite image editor doesn't yet support these formats.
+		- If your image is a photo use JPEG.
+		- If your image is an illustration or line art use PNG. If the option is available, you can also try SVG but the file size is based on the amount of details in the image rather than the number of pixels. 
+		- If your image has animation use GIF.
+- Use a compression optimizer
+	- There are several tools available to optimize the compression of your images.
+	- These tools try various combinations of settings to try to get the best possible compression.
+	- They are typically easy to use, just drag and drop the images into the application.
+	- Make sure to keep back up copies to compare the differences.
+
+-->
+
+## Image Content
+
+The effectiveness of image compression depends a lot on the content of the image. If you take care during the creation of the image you can maximize what the compression algorithm can do.
+
+### Noise
+
+Before we understand how noise affects image compression, we need to understand how image compression works. Image compression works by finding areas of pixels where their colors are similar. If it can predict the color of the next pixel, it doesn't have to save that pixel. This is a simplified explanation, but it works well enough for our needs.
+
+Noise, being random, causes this prediction mechanism to fail requiring more pixels to be saved. Here is an example that demonstrates the effect of noise. Both of these images contain the same number of black and white pixels. In the first image the white pixels form a contiguous region, in the second image the white pixels are randomly placed.
+
+<ImageCompare>
+	<ComparisonImage
+		alt="Image with randomized pixels"
+		size="96KB"
+		image={require('./noise-noised.png').default}
+	/>
+	<ComparisonImage
+		alt="Image with contiguous pixels"
+		size="3KB"
+		image={require('./noise-ordered.png').default}
+	/>
+</ImageCompare>
+
+In this demonstration the image with contiguous pixels is 32x smaller than the one with randomized pixels. Taking care to prevent noise in your image or using a denoising filter in your favorite image editing application can greatly improve your image compression.
+
+### Color
+
+Color can have a similar effect on image compression. The color black (#000000) compresses better than any other color. For this example we have two images of a solid color one cyan the other black.
+
+<ImageCompare>
+	<ComparisonImage
+		alt="Other Color Image"
+		size="5KB"
+		image={require('./color-other.png').default}
+	/>
+	<ComparisonImage
+		alt="Black Image"
+		size="3KB"
+		image={require('./color-black.png').default}
+	/>
+</ImageCompare>
+
+Color can affect file size in other ways, too. By reducing the number of colors you can reduce the file size. In this next example a posterize filter was added to the photo to reduce the number of colors. This works by increasing the size of the regions of the same color allowing the prediction to be more accurate in those regions.
+
+We can take this to an extreme by switching the image to indexed mode. Some image formats have special compression modes for indexed images. This can cause significant degradation of the image quality so it may not work for all situations.
+
+<ImageCompare>
+	<ComparisonImage
+		alt="Original Image"
+		size="425KB"
+		image={require('./color-grace-hopper-orig.png').default}
+	/>
+	<ComparisonImage
+		alt="Posterized"
+		size="381KB"
+		image={require('./color-grace-hopper-posterized.png').default}
+	/>
+	<ComparisonImage
+		alt="Indexed"
+		size="142KB"
+		image={require('./color-grace-hopper-indexed.png').default}
+	/>
+</ImageCompare>
+
+### Size
+
+Lastly, the size of the image also a factor. The more pixels there are the bigger the file size will be. Up to now the images have been sized bigger than necessary to demonstrate the effect discussed, but sizing the images to be only as big as necessary will also have a huge impact on file size.
+
+<ImageCompare>
+	<ComparisonImage
+		alt="1024px Image"
+		size="8KB"
+		dim="256"
+		image={require('./size-1024px.png').default}
+	/>
+	<ComparisonImage
+		alt="256px Image"
+		size="6KB"
+		dim="256"
+		image={require('./size-256px.png').default}
+	/>
+</ImageCompare>
+
+Diving deeper into the ways that image size can affect file size, we can look at rectangular images. The following images contain the same number of pixels, but the long image compresses better than the tall image. This is because image compression works on a row-by-row basis, meaning that it has to start over at the beginning of each row.
+
+<ImageCompare>
+	<ComparisonImage
+		alt="Tall Image"
+		size="6KB"
+		dim="32"
+		image={require('./size-tall.png').default}
+	/>
+	<ComparisonImage
+		alt="Wide Image"
+		size="4KB"
+		dim="256"
+		image={require('./size-wide.png').default}
+	/>
+</ImageCompare>
+
+## File Type
+
+Once you've finalized the content of the image, you can move on to choosing the correct file type. The file type can have an effect on both the file size and the quality of the image. So choosing the correct file type is very important.
+
+### Vector vs Raster
+
+Up to now we've only talked about raster images. Raster images are images that made of pixels arranged in a grid. This may be your only choice if your image is a photo, but if your image is an illustration you may have another option.
+
+Vector images are images that use curves and lines to draw shapes. We haven't covered vector images in this guide, but they can provide better quality and smaller file sizes in some circumstances.
+
+export const LossySvg = require('./loss-vec.svg').default;
+
+<ImageCompare>
+	<ComparisonSvg
+		alt="Vector image (SVG)"
+		size="476 bytes"
+		dim="256"
+		image={<LossySvg style={{width: '256px', height: '256px'}} />}
+	/>
+	<ComparisonImage
+		alt="Raster image (PNG)"
+		size="415 bytes"
+		dim="256"
+		pixelated
+		image={require('./loss-lossless.png').default}
+	/>
+</ImageCompare>
+
+### Lossless vs. Lossy
+
+Image compression can generally be divided into two categories lossless and lossy. Virtually all file types can be used with both lossless and lossy compression.
+
+Lossless compression aims to keep the image exactly like the original. Formats that use lossless compression are good for general purpose image compression, but they aren't as small as ones that use lossy compression.
+
+Lossy image compression uses visual tricks to discard data that you probably wont notice. When used correctly, this can greatly reduce the file size. These types of compression are limited to specific types of images. If not used correctly, They can result in a poor quality image if used incorrectly.
+
+<ImageCompare>
+	<ComparisonImage
+		alt="Lossless compression (PNG)"
+		size="415 bytes"
+		dim="256"
+		pixelated
+		image={require('./loss-lossless.png').default}
+	/>
+	<ComparisonImage
+		alt="Lossy compression (incorrectly used) (JPEG)"
+		size="1KB"
+		dim="256"
+		pixelated
+		image={require('./loss-lossy.jpeg').default}
+	/>
+</ImageCompare>
+
+### State of the art compression
+
+Whenever possible you should use a state of the art file format like JPEG XL or AVIF. These formats are growing in support and offer vastly improved compression compared to conventional formats like JPEG and PNG.
+
+
