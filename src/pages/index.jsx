@@ -30,8 +30,8 @@ export default function Home() {
         <section className={styles['link-section']}>
           <div className={styles['link-block']}>
             <h2>Neat Stuff</h2>
-            <Link to="/image-lint/">image-lint</Link>
-            <Link to="/block-game-tools/">Block Game Tools</Link>
+            <Link to="https://aaronasachimp.github.io/image-lint/">image-lint</Link>
+            <Link to="https://aaronasachimp.github.io/block-game-tools/">Block Game Tools</Link>
           </div>
           <div className={styles['link-block']}>
             <h2>Guides</h2>
