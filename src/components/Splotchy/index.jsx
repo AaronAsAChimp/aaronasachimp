@@ -57,14 +57,17 @@ export default function Splotchy() {
         requestRef.current = requestAnimationFrame(animate);
         setState([
             {
+                name: 1,
                 x: circles.a.x,
                 y: circles.a.y,
                 r: 15 + (Math.sin(circles.a.r) + 1) * 11
             }, {
+                name: 2,
                 x: circles.b.x,
                 y: circles.b.y,
                 r: 15 + (Math.sin(circles.b.r) + 1) * 5
             }, {
+                name: 3,
                 x: circles.c.x,
                 y: circles.c.y,
                 r: 10 + (Math.sin(circles.c.r) + 1) * 15
@@ -110,11 +113,13 @@ export default function Splotchy() {
         <g style={{ filter: 'url(#filter1012)' }}>
             { state.map((circle) => {
                 return <circle
+                    key={circle.name}
+                    title={circle.name}
                     className={styles.blob}
                     cx={ circle.x }
                     cy={ circle.y }
                     r={ circle.r } />
-            }) }
+            })}
         </g>
     </svg>
     );

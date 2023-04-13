@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import Splotchy from '../components/Splotchy';
+import Social from '../components/Social';
 
 import styles from './index.module.css';
 import Link from '@docusaurus/Link';
@@ -37,12 +38,7 @@ export default function Home() {
             <h2>Guides</h2>
             <Link to="/docs/optimizing-images/">Optimizing Images</Link>
           </div>
-          <div className={styles['link-block']}>
-            <h2>Socials</h2>
-            <Link to="https://stackoverflow.com/users/1141784/aaronasachimp">Stack Overflow</Link>
-            <Link to="https://github.com/AaronAsAChimp">Github</Link>
-            <Link to="https://twitter.com/AaronAsAChimp">Twitter</Link>
-          </div>
+          <Social twitter="AaronAsAChimp" github="AaronAsAChimp" stackoverflow="1141784/aaronasachimp"></Social>
         </section>
         <Splotchy className={styles.bgBlock} />
       </main>

@@ -1,0 +1,14 @@
+.socials {
+	display: flex;
+	margin-top: 6em;
+}
+
+.socials-item {
+	display: flex;
+	flex: 1 0 auto;
+	justify-content: center;
+}
+
+.socials-item-icon {
+	height: 3em;
+}
