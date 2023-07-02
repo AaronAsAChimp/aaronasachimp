@@ -35,6 +35,7 @@ export default function Home() {
           <div className={styles['link-block']}>
             <h2>Guides</h2>
             <Link to="/docs/optimizing-images/">Optimizing Images</Link>
+            <Link to="/docs/svg/">SVG and the off by ½ error</Link>
           </div>
           <Social twitter="AaronAsAChimp" github="AaronAsAChimp" stackoverflow="1141784/aaronasachimp"></Social>
         </section>
