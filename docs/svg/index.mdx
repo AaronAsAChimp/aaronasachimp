@@ -102,12 +102,10 @@ You may know this as anti-aliasing. In most cases this is good because it smooth
 
 To find a solution to this problem, lets take a look at our third example. With a three pixel stroke, it has qualities of both the 2 pixel stroke and the one pixel stroke. This is because every odd number is just an even number plus 1. 
 
-Our three pixel stroke is rendered as a two pixel stroke plus the half pixel to the left and right. This insight tracks with all even width strokes rendering crisply, while odd numbered strokes always have a blurry edge.
-
-So our solution comes in two parts:
+Our three pixel stroke is rendered as a two pixel stroke plus the half pixel to the left and right. This insight tracks with all even width strokes rendering crisply, while odd numbered strokes always have a blurry edge. So our solution comes in two parts:
 
 - If the shape has a stroke with an even pixel width, leave it alone.
-- If the shape has a stroke with an odd pixel width, shift the shape left and up by a half pixel.
+- If the shape has a stroke with an odd pixel width, shift the shape right and down by a half pixel.
 
 <ImageCompare>
 	<ComparisonImage
