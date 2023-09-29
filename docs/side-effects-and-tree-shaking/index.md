@@ -114,9 +114,9 @@ pulled into the bundle because of one errant side effect.
 
 ## Wrapping up
 
-Yes, side effects limit the effectiveness of tree shaking. Applications need to
-have effects, but we should limit these effects to a single place in the entry
-point of the application.
+To answer our initial question, yes, side effects limit the effectiveness of
+tree shaking. Applications need to have effects, but we should limit these
+effects to a single place in the entry point of the application.
 
 If these effects are buried deep in a module it isn't just difficult to debug, it
 could actually affect the performance of your application and bloat your
