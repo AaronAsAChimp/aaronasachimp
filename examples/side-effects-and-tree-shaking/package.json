@@ -1,0 +1,18 @@
+{
+  "name": "side-effects-examples",
+  "version": "1.0.0",
+  "description": "An example of modules without side effects",
+  "source": "src/index.js",
+  "main": "dist/index.js",
+  "scripts": {
+    "build:no-side-effect": "webpack ./src/no-side-effect/main.js --mode=production",
+    "build:side-effect-simple": "webpack ./src/side-effect-simple/main.js --mode=production",
+    "build:side-effect-complex": "webpack ./src/side-effect-complex/main.js --mode=production"
+  },
+  "author": "",
+  "license": "CC0",
+  "devDependencies": {
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  }
+}

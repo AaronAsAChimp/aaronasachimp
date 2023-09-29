@@ -36,6 +36,7 @@ export default function Home() {
             <h2>Guides</h2>
             <Link to="/docs/optimizing-images/">Optimizing Images</Link>
             <Link to="/docs/svg/">SVG and the off by ½ error</Link>
+            <Link to="/docs/side-effects-and-tree-shaking/">Do side effects prevent tree shaking?</Link>
           </div>
           <Social twitter="AaronAsAChimp" github="AaronAsAChimp" stackoverflow="1141784/aaronasachimp"></Social>
         </section>

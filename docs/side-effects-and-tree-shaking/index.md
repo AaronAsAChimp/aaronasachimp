@@ -1,0 +1,123 @@
+# Do side effects prevent tree shaking?
+
+Tree shaking has taken the JavaScript community by storm. In this article we
+will look into how side effects affect tree shaking and contribute to larger
+bundle sizes.
+
+## How does tree shaking work?
+
+The process can be boiled down to the following steps:
+
+1. For any export that is not used by another module, remove the export keyword.
+2. Use normal minification tools to remove the unused code.
+
+## What is a side effect?
+
+Any code that executes at the root of a module is a side effect, unless its a
+pure function (but that's a topic for a different article).
+
+```js
+import {funk} from 'boogie'; // <--- Not a Side Effect
+
+class GrooveTrain extends Vehicle {} // <--- Not a Side Effect
+
+function getDown() {} // Also not a Side Effect
+```
+
+
+```js
+import 'boogie'; // <--- Side Effect only import
+
+const groove = getDown(); // <--- Side Effect
+
+console.log(groove) // <--- Side Effect
+```
+
+## How does this affect bundles?
+
+Lets start by looking at a module without side effects. In this module we only
+define a class and export it.
+
+```js
+// module.js
+export class ModuleClass { /* ... */ }
+
+
+// main.js
+import {ModuleClass} from './module.js';
+```
+
+When your bundler runs, Webpack 5 in this case, `main.js` will be an empty
+file. The `ModuleClass` import is eliminated because it isn't used, our tree
+shaking is working as expected.
+
+Now lets add a log message. This is an entirely reasonable thing to do, but lets
+take a look at how it affects the output.
+
+
+```js
+// module.js
+console.log('Hello World');
+export class ModuleClass { /* ... */ }
+
+
+// main.js
+import {ModuleClass} from './module.js';
+```
+
+Webpack output:
+
+```js
+(()=>{"use strict";console.log("Hello World")})();
+```
+
+Ah ha! Our module was included. This is because the bundler must preserve all of
+the functionality of the code, so any code that runs at the root level needs to
+be included in the bundle. The class definition, however, is still eliminated
+because it isn't used.
+
+This doesn't seem like that big of a deal, but lets look at a more realistic
+example. Here we are doing something a little bit different, see if you can
+guess what the output will be.
+
+```js
+// module.js
+export class ModuleClass {
+	sayCheese() {
+		return 'cheese';
+	}
+
+	static greet() {
+		return 'Hello World';
+	}
+} 
+
+console.log(ModuleClass.greet());
+
+// main.js
+import module from './module.js';
+```
+
+Because we are calling the static method from the side effect it now becomes a
+side effect itself. Meaning that it and everything it depends on ends up in the
+bundle.
+
+Webpack output:
+
+```js
+(()=>{"use strict";console.log(class{sayCheese(){return"cheese"}static greet(){return"Hello World"}}.greet())})();
+```
+
+This is where things go wrong because in a real world application modules often
+have many dependencies and even more transitive dependencies which can get
+pulled into the bundle because of one errant side effect.
+
+## Wrapping up
+
+Yes, side effects limit the effectiveness of tree shaking. Applications need to
+have effects, but we should limit these effects to a single place in the entry
+point of the application.
+
+If these effects are buried deep in a module it isn't just difficult to debug, it
+could actually affect the performance of your application and bloat your
+bundles.
