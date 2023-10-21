@@ -1,0 +1,14 @@
+.page-footer {
+	padding: 3em;
+	color: white;
+	background: #1d1614;
+	margin-top: 114px;
+}
+
+.page-footer-inner {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	width: var(--page-width);
+	margin: 0 auto;
+	align-items: center;
+}

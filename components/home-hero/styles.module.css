@@ -1,0 +1,16 @@
+.home-hero {
+	width: var(--page-width);
+	margin: 0 auto 114px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.home-hero-img {
+	margin: 90px 0 64px;
+}
+
+.home-heading {
+	font-size: 64px;
+	margin: 0;
+}

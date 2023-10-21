@@ -1,0 +1,9 @@
+.image-compare {
+	display: grid;
+}
+
+.comparison-image {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}

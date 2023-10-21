@@ -1,41 +1,9 @@
+import {ImageCompare, ComparisonImage} from '../../../components/image-compare/ImageCompare';
+export {ArticleLayout as default} from '../../../components/article-layout/ArticleLayout';
+
 # Optimizing images
 
-export const ImageCompare = ({children}) => (
-  <div
-    style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(2, 1fr)'
-    }}>
-    {children}
-  </div>
-);
-
-export const ComparisonImage = ({alt, image, size, dim, pixelated}) => (
-	<figure style={{
-		display: 'flex',
-		flexDirection: 'column', 
-		alignItems: 'center'
-	}}>
-		<img alt={alt} src={image} style={{
-			width: dim ? dim + 'px' : null,
-			imageRendering: pixelated ? 'pixelated' : null
-		}} />
-		<figcaption>{alt + ' (' + size + ')'}</figcaption>
-	</figure>
-);
-
-export const ComparisonSvg = ({alt, image, size, dim}) => (
-	<figure style={{
-		display: 'flex',
-		flexDirection: 'column', 
-		alignItems: 'center'
-	}}>
-		{image}
-		<figcaption>{alt + ' (' + size + ')'}</figcaption>
-	</figure>
-);
-
-<!--
+{/*
 - Consider the image content
 	- Images with a lot of noise will not compress as well as images without noise.
 		- If your image is noisy, use the denoising filter in your favorite image editor.
@@ -60,7 +28,7 @@ export const ComparisonSvg = ({alt, image, size, dim}) => (
 	- They are typically easy to use, just drag and drop the images into the application.
 	- Make sure to keep back up copies to compare the differences.
 
--->
+*/}
 
 ## Image Content
 
@@ -76,12 +44,14 @@ Noise, being random, causes this prediction mechanism to fail requiring more pix
 	<ComparisonImage
 		alt="Image with randomized pixels"
 		size="96KB"
-		image={require('./noise-noised.png').default}
+		dim="256"
+		image={require('./noise-noised.png').default.src}
 	/>
 	<ComparisonImage
 		alt="Image with contiguous pixels"
 		size="3KB"
-		image={require('./noise-ordered.png').default}
+		dim="256"
+		image={require('./noise-ordered.png').default.src}
 	/>
 </ImageCompare>
 
@@ -95,12 +65,14 @@ Color can have a similar effect on image compression. The color black (#000000) 
 	<ComparisonImage
 		alt="Other Color Image"
 		size="5KB"
-		image={require('./color-other.png').default}
+		dim="256"
+		image={require('./color-other.png').default.src}
 	/>
 	<ComparisonImage
 		alt="Black Image"
 		size="3KB"
-		image={require('./color-black.png').default}
+		dim="256"
+		image={require('./color-black.png').default.src}
 	/>
 </ImageCompare>
 
@@ -112,17 +84,20 @@ We can take this to an extreme by switching the image to indexed mode. Some imag
 	<ComparisonImage
 		alt="Original Image"
 		size="425KB"
-		image={require('./color-grace-hopper-orig.png').default}
+		dim="256"
+		image={require('./color-grace-hopper-orig.png').default.src}
 	/>
 	<ComparisonImage
 		alt="Posterized"
 		size="381KB"
-		image={require('./color-grace-hopper-posterized.png').default}
+		dim="256"
+		image={require('./color-grace-hopper-posterized.png').default.src}
 	/>
 	<ComparisonImage
 		alt="Indexed"
 		size="142KB"
-		image={require('./color-grace-hopper-indexed.png').default}
+		dim="256"
+		image={require('./color-grace-hopper-indexed.png').default.src}
 	/>
 </ImageCompare>
 
@@ -135,13 +110,13 @@ Lastly, the size of the image also a factor. The more pixels there are the bigge
 		alt="1024px Image"
 		size="8KB"
 		dim="256"
-		image={require('./size-1024px.png').default}
+		image={require('./size-1024px.png').default.src}
 	/>
 	<ComparisonImage
 		alt="256px Image"
 		size="6KB"
 		dim="256"
-		image={require('./size-256px.png').default}
+		image={require('./size-256px.png').default.src}
 	/>
 </ImageCompare>
 
@@ -152,13 +127,13 @@ Diving deeper into the ways that image size can affect file size, we can look at
 		alt="Tall Image"
 		size="6KB"
 		dim="32"
-		image={require('./size-tall.png').default}
+		image={require('./size-tall.png').default.src}
 	/>
 	<ComparisonImage
 		alt="Wide Image"
 		size="4KB"
 		dim="256"
-		image={require('./size-wide.png').default}
+		image={require('./size-wide.png').default.src}
 	/>
 </ImageCompare>
 
@@ -172,21 +147,19 @@ Up to now we've only talked about raster images. Raster images are images that m
 
 Vector images are images that use curves and lines to draw shapes. We haven't covered vector images in this guide, but they can provide better quality and smaller file sizes in some circumstances.
 
-export const LossySvg = require('./loss-vec.svg').default;
-
 <ImageCompare>
-	<ComparisonSvg
+	<ComparisonImage
 		alt="Vector image (SVG)"
 		size="476 bytes"
 		dim="256"
-		image={<LossySvg style={{width: '256px', height: '256px'}} />}
+		image={require('./loss-vec.svg').default.src}
 	/>
 	<ComparisonImage
 		alt="Raster image (PNG)"
 		size="415 bytes"
 		dim="256"
 		pixelated
-		image={require('./loss-lossless.png').default}
+		image={require('./loss-lossless.png').default.src}
 	/>
 </ImageCompare>
 
@@ -204,14 +177,14 @@ Lossy image compression uses visual tricks to discard data that you probably won
 		size="415 bytes"
 		dim="256"
 		pixelated
-		image={require('./loss-lossless.png').default}
+		image={require('./loss-lossless.png').default.src}
 	/>
 	<ComparisonImage
 		alt="Lossy compression (incorrectly used) (JPEG)"
 		size="1KB"
 		dim="256"
 		pixelated
-		image={require('./loss-lossy.jpeg').default}
+		image={require('./loss-lossy.jpeg').default.src}
 	/>
 </ImageCompare>
 

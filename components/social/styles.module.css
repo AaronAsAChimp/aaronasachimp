@@ -1,6 +1,10 @@
 .socials {
 	display: flex;
-	margin-top: 6em;
+	gap: 2em;
+}
+
+.socials a {
+	color: inherit;
 }
 
 .socials-item {
@@ -10,5 +14,5 @@
 }
 
 .socials-item-icon {
-	height: 3em;
+	height: 2.2em;
 }

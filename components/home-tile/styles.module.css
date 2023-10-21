@@ -1,0 +1,17 @@
+.home-tile {
+	font-size: 20px;
+}
+
+.home-tile-heading {
+	font-size: 24px;
+	margin: 0 0 11px 0;
+}
+
+.home-tile-blurb {
+	margin: 11px 0;
+}
+
+.home-tile-cta {
+	color: #F7C83D;
+	text-decoration: none;
+}

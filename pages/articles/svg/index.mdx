@@ -1,8 +1,10 @@
-import {ImageCompare, ComparisonImage, ComparisonSvg} from '../../src/components/ImageCompare/index.jsx';
+import {ImageCompare, ComparisonImage} from '../../../components/image-compare/ImageCompare';
+
+export {ArticleLayout as default} from '../../../components/article-layout/ArticleLayout';
 
 # SVG and the off by ½ error
 
-<!--
+{/*
 Strokes and alignment to the pixel grid.
 SVG defines its coordinate system starting on the boundaries between pixels
 If you tell it to position a rectangle at x=10px the edge of the rectangle (without stroke) starts on the 10th pixel.
@@ -11,7 +13,7 @@ This seems reasonable, but lets examine what happens when the stroke has an odd 
 Take a stroke thats 3 pixels wide.
 Half of the stroke is to the left and the other half is to the right, but half of 3 pixels (1.5) is not a whole number.
 This causes the half pixel to be rendered lightly and the whole stroke to look slightly fuzzy.
--->
+*/}
 
 SVG receives a lot of praise for being an easy to use, well-supported, format for vector graphics. When you need high quality resolution independent images there is no substitute. But below the surface of this celebrated format lies a dirty secret.
 
@@ -19,13 +21,11 @@ SVG receives a lot of praise for being an easy to use, well-supported, format fo
 
 For the types of images we are most used to (JPG, PNG, etc.) an image is constructed from a grid of pixels. A pair of coordinates refer to the whole pixel with no ability to reference a partial pixel.
 
-export const PixelRasterSvg = require('./pixel-raster.svg').default;
-
 <ImageCompare>
-	<ComparisonSvg
+	<ComparisonImage
 		alt="A pixel in a raster image."
 		dim="256"
-		image={<PixelRasterSvg style={{width: '256px', height: '256px'}} />}
+		image={require('./pixel-raster.svg').default.src}
 	/>
 </ImageCompare>
 
@@ -33,13 +33,11 @@ An SVG image, however, is not made of pixels. SVG images are made of shapes that
 
 This is one of the main reasons why SVGs, and vector graphics in general, provide better quality images than the other formats. Leaving one important question, how do these coordinates translate to the pixel grid.
 
-export const PixelWhereSvg = require('./pixel-where.svg').default;
-
 <ImageCompare>
-	<ComparisonSvg
+	<ComparisonImage
 		alt="Pixels, where?"
 		dim="256"
-		image={<PixelWhereSvg style={{width: '256px', height: '256px'}} />}
+		image={require('./pixel-where.svg').default.src}
 	/>
 </ImageCompare>
 
@@ -47,13 +45,11 @@ export const PixelWhereSvg = require('./pixel-where.svg').default;
 
 To eliminate this ambiguity, the SVG standard defines the whole number part of the coordinates to be on the boundary between pixels.
 
-export const PixelVectorSvg = require('./pixel-vector.svg').default;
-
 <ImageCompare>
-	<ComparisonSvg
+	<ComparisonImage
 		alt="A pixel in a vector image."
 		dim="256"
-		image={<PixelVectorSvg style={{width: '256px', height: '256px'}} />}
+		image={require('./pixel-vector.svg').default.src}
 	/>
 </ImageCompare>
 
@@ -64,19 +60,19 @@ At a surface level this makes a lot of sense, but once we get into the details o
 		alt="Rectangle with a 1px black stroke"
 		dim="256"
 		pixelated
-		image={require('./rect-1px.png').default}
+		image={require('./rect-1px.png').default.src}
 	/>
 	<ComparisonImage
 		alt="Rectangle with a 2px black stroke"
 		dim="256"
 		pixelated
-		image={require('./rect-2px.png').default}
+		image={require('./rect-2px.png').default.src}
 	/>
 	<ComparisonImage
 		alt="Rectangle with a 3px black stroke"
 		dim="256"
 		pixelated
-		image={require('./rect-3px.png').default}
+		image={require('./rect-3px.png').default.src}
 	/>
 </ImageCompare>
 
@@ -84,13 +80,11 @@ In this example we've zoomed in on a rectangle with varying thicknesses of strok
 
 The coordinates, and therefore the edge, of the rectangle lie on the boundary between two pixels. So if we were to draw a two pixel stroke one full pixel will lie to the left of the edge and another full pixel will be to the right.
 
-export const RectWithStrokeSvg = require('./rect-with-stroke.svg').default;
-
 <ImageCompare>
-	<ComparisonSvg
+	<ComparisonImage
 		alt="Two half pixels"
 		dim="256"
-		image={<RectWithStrokeSvg style={{width: '256px', height: '256px'}} />}
+		image={require('./rect-with-stroke.svg').default.src}
 	/>
 </ImageCompare>
 
@@ -112,7 +106,7 @@ Our three pixel stroke is rendered as a two pixel stroke plus the half pixel to 
 		alt="The 3px rectangle coming into focus when we apply our logic"
 		dim="256"
 		pixelated
-		image={require('./rect-into-focus.webp').default}
+		image={require('./rect-into-focus.webp').default.src}
 	/>
 </ImageCompare>
 

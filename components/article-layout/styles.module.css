@@ -1,0 +1,20 @@
+.article {
+	width: var(--page-width);
+	margin: 0 auto;
+}
+
+.article h1 {
+	font-size: 1.8em;
+}
+
+.article p {
+	line-height: 1.6;
+	font-size: 1.1em;
+	font-weight: 200;
+}
+
+.article [data-rehype-pretty-code-fragment] pre {
+	padding: 2em;
+	border-radius: 0.6em;
+	overflow: auto;
+}

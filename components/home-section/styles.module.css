@@ -1,0 +1,10 @@
+.home-section {
+	width: var(--page-width);
+	margin: 114px auto;
+}
+
+.home-section-items {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 46px;
+}

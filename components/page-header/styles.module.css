@@ -1,0 +1,36 @@
+.page-nav {
+	position: sticky;
+	top: 0;
+	padding: 1em;
+	backdrop-filter: blur(10px);
+	background: #1d161438;
+}
+
+.page-nav nav {
+	display: grid;
+	grid-template-columns: auto auto 1fr;
+	width: var(--page-width);
+	margin: 0 auto;
+	gap: 2em;
+	align-items: center;
+}
+
+.page-nav-title {
+	font-size: 1.2em;
+}
+
+.page-nav-links {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.page-nav-links li {
+	display: inline-block;
+	margin-right: 2em;
+}
+
+.page-nav-links li a {
+	color: inherit;
+	text-decoration: none;
+}
