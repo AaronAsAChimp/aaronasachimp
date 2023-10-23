@@ -14,7 +14,7 @@ export function ImageCompare({children}) {
 export function  ComparisonImage({alt, image, size, dim, pixelated}) {
 	return <figure className={styles['comparison-image']}>
 		<img alt={alt} src={image} width={dim} style={{
-			imageRendering: pixelated ? 'pixelated' : null
+			imageRendering: pixelated ? 'pixelated' : void 0
 		}} />
 		<figcaption>{alt + ( !!size ? ' (' + size + ')' : '')}</figcaption>
 	</figure>

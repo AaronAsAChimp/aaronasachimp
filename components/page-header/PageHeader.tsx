@@ -19,7 +19,7 @@ export function PageHeader() {
 			<span className={clsx(lexendFont.className, styles['page-nav-title'])}>Aaron Spaulding</span>
 			<ul className={styles['page-nav-links']}>
 				<li><Link href="/">Home</Link></li>
-				<li><Link href="/articles">Articles</Link></li>
+				<li><Link href="/articles/">Articles</Link></li>
 			</ul>
 		</nav>
 	</div>

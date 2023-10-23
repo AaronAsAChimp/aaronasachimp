@@ -39,7 +39,7 @@ jobs:
           node-version: 16
           cache: 'npm'
       - run: npm ci
-      - name: Docusaurus
+      - name: Next.js
         run: npm run build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
