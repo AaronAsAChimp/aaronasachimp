@@ -15,7 +15,7 @@ const lexendFont = Lexend({
 export function PageHeader() {
 	return <div className={styles['page-nav']}>
 		<nav>
-			<img src={logoSvg.src} width={logoSvg.width / 10} height={logoSvg.height / 10}/>
+			<Link href="/"><img src={logoSvg.src} width={logoSvg.width / 10} height={logoSvg.height / 10}/></Link>
 			<span className={clsx(lexendFont.className, styles['page-nav-title'])}>Aaron Spaulding</span>
 			<ul className={styles['page-nav-links']}>
 				<li><Link href="/">Home</Link></li>
