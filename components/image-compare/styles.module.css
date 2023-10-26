@@ -1,9 +1,21 @@
 .image-compare {
 	display: grid;
+	gap: 1em;
+	justify-content: center;
+	margin: 1.5em 0 3em;
 }
 
 .comparison-image {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	margin: 0;
+	padding: 1.4em;
+	background: #caaca321;
+	border-radius: 1em;
+	box-shadow: 0 20px 30px #00000026;
+}
+
+.comparison-image figcaption {
+	padding: 1em 1em 0;
 }
