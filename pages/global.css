@@ -1,5 +1,6 @@
 :root {
 	--page-width: 758px;
+	--page-margin: auto;
 }
 
 body {
@@ -14,7 +15,8 @@ body {
 }
 
 @media (width < 800px) {
-	body {
-		color: red;
+	:root {
+		--page-width: auto;
+		--page-margin: 3em;
 	}
 }

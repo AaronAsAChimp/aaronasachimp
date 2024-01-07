@@ -1,10 +1,16 @@
 .home-section {
 	width: var(--page-width);
-	margin: 114px auto;
+	margin: 114px  var(--page-margin);
 }
 
 .home-section-items {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 46px;
+}
+
+@media (width < 800px) {
+	.home-section-items {
+		grid-template-columns: 1fr;
+	}
 }

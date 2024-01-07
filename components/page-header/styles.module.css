@@ -10,7 +10,7 @@
 	display: grid;
 	grid-template-columns: auto auto 1fr;
 	width: var(--page-width);
-	margin: 0 auto;
+	margin: 0 var(--page-margin);
 	gap: 2em;
 	align-items: center;
 }
