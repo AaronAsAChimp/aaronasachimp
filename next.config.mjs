@@ -1,6 +1,12 @@
-const rehypePrettyCode = require('rehype-pretty-code');
-const withMDX = require('@next/mdx')({
+import rehypePrettyCode from 'rehype-pretty-code';
+import remarkFrontmatter from 'remark-frontmatter';
+import mdx from '@next/mdx';
+
+const withMDX = mdx({
   options: {
+    remarkPlugins: [
+      remarkFrontmatter
+    ],
     rehypePlugins:[
       rehypePrettyCode
     ]
@@ -16,4 +22,4 @@ const nextConfig = {
   // Optionally, add any other Next.js config below
 }
  
-module.exports = withMDX(nextConfig);
+export default withMDX(nextConfig);
