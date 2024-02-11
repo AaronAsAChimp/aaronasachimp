@@ -1,0 +1,31 @@
+.qrcode-editor {
+	display: grid;
+	grid-template: "code form"
+				   "data form";
+	grid-template-columns: auto 1fr;
+	gap: 2em;
+}
+
+.qrcode-form {
+	grid-area: form;
+}
+
+.qrcode-form > label {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 1em;
+}
+
+.qrcode-form :invalid {
+	border: 1px solid red;
+}
+
+.qrcode-code {
+	grid-area: code;
+}
+
+.qrcode-data {
+	grid-area: data;
+	white-space: pre;
+	overflow: auto;
+}

@@ -12,7 +12,7 @@ export function ImageCompare({children}) {
 }
 
 export function  ComparisonImage({alt, image, size, dim, pixelated}) {
-	return <figure className={styles['comparison-image']}>
+	return <figure className={styles['comparison-image'] + ' article-aside'}>
 		<img alt={alt} src={image} width={dim} style={{
 			imageRendering: pixelated ? 'pixelated' : void 0
 		}} />

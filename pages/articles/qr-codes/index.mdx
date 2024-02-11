@@ -1,0 +1,447 @@
+export {ArticleLayout as default} from '../../../components/article-layout/ArticleLayout';
+import qrcode from 'qrcode';
+import {useRef, useEffect, useState} from 'react';
+import styles from './index.module.css';
+
+export function QrCode({data, width, height}) {
+	const canvasRef = useRef();
+
+	useEffect(() => {
+		if (data) {
+			qrcode.toCanvas(canvasRef.current, data);
+		}
+	}, [data]);
+
+	return <canvas ref={canvasRef} width={width} height={height} />
+}
+
+export function QrCodeEditor({renderForm}) {
+	const [data, setData] = useState('');
+	const formRef = useRef();
+
+/*	useEffect(() => {
+		formRef.current.reportValidity();
+	}, [data]);*/
+
+	return <div className={styles['qrcode-editor'] + ' article-aside'}>
+		<form ref={formRef} className={styles['qrcode-form']}>
+			{ renderForm(setData) }
+		</form>	
+		<div className={styles['qrcode-data']}>
+		{ data }
+		</div>
+		<QrCode className={styles['qrcode-code']} data={data} width={128} height={128} />
+	</div>
+}
+
+export function vdate(date) {
+	if (!date) {
+		return null;
+	}
+
+	return date.getUTCFullYear()
+        + (date.getUTCMonth() + 1).toString().padStart(2, '0')
+        + date.getUTCDate().toString().padStart(2, '0');
+}
+
+export function vdatetime(date) {
+	if (!date) {
+		return null;
+	}
+
+	return vdate(date)
+        + 'T' + date.getUTCHours().toString().padStart(2, '0')
+        + date.getUTCMinutes().toString().padStart(2, '0')
+        + date.getUTCSeconds().toString().padStart(2, '0') +
+        'Z';
+}
+
+
+# What can you put into a QR Code?
+
+Any kind of binary data, thanks for reading my article.
+
+Wait, hold up, don't hit the back button. Theres more to this story because we are not really talking about QR Codes but QR Code readers. QR Code readers programmed to interpret the data in a QR Code in different ways and we'll go over them here.
+
+## URIs
+
+The most common way information is encoded into QR Codes is is URIs. A URI, Uniform Resource Indentifier, is a way of referring to something using plain text.
+
+One of the most common types of URIs are used to refer to web pages. You probably know these as URLs.
+
+export function UrlForm({onDataUpdate}) {
+	const [url, setUrl] = useState('http://example.com');
+
+	useEffect(() => {
+		onDataUpdate(url);
+	}, [url])
+
+	return <label>
+		URL
+		<input type="url" value={url} onInput={(e) => setUrl(e.target.value.trim())} />
+	</label>
+}
+
+<QrCodeEditor
+	renderForm={(onDataUpdate) => <UrlForm onDataUpdate={onDataUpdate} />}
+/>
+
+But URIs can do a lot more than take you to blog posts where bored developers wax poetic about esoterica. They can be used to send emails,
+
+
+export function EmailForm({onDataUpdate}) {
+	const [email, setEmail] = useState('alex@example.com');
+
+	useEffect(() => {
+		onDataUpdate('mailto:' + email);
+	}, [email]);
+
+	return <label>
+		Email Address
+		<input type="email" value={email} onInput={(e) => setEmail(e.target.value)} />
+	</label>
+}
+
+<QrCodeEditor
+	renderForm={(onDataUpdate) => <EmailForm onDataUpdate={onDataUpdate} />}
+/>
+
+
+make phone calls,
+
+export function TelForm({onDataUpdate}) {
+	const [tel, setTel] = useState('+1 (999) 555-1234');
+
+	useEffect(() => {
+		onDataUpdate('tel:+' + tel.replace(/\D+/g, ''));
+	}, [tel]);
+
+	return <label>
+		Phone Number
+		<input type="text" value={tel} onInput={(e) => setTel(e.target.value)} />
+	</label>
+}
+
+<QrCodeEditor
+	renderForm={(onDataUpdate) => <TelForm onDataUpdate={onDataUpdate} />}
+/>
+
+send text messages,
+
+export function SmsForm({onDataUpdate}) {
+	const [tel, setTel] = useState('+1 (999) 555-1234');
+	const [body, setBody] = useState('');
+
+	useEffect(() => {
+		let bodyParam = ''
+
+		if (body) {
+			bodyParam = '?&body=' + encodeURIComponent(body);
+		}
+
+		onDataUpdate('sms:+' + tel.replace(/\D+/g, '') + bodyParam);
+	}, [tel, body]);
+
+	return <>
+		<label>
+			Phone Number
+			<input type="text" value={tel} onInput={(e) => setTel(e.target.value)} />
+		</label>
+		<label>
+			Body
+			<input type="text" value={body} onInput={(e) => setBody(e.target.value)} />
+		</label>
+	</>
+}
+
+<QrCodeEditor
+	renderForm={(onDataUpdate) => <SmsForm onDataUpdate={onDataUpdate} />}
+/>
+
+and take you places.
+
+export function GeoForm({onDataUpdate}) {
+	const [lat, setLat] = useState(37.786971);
+	const [lng, setLng] = useState(-122.399677);
+	const [uncertainty, setUncertainty] = useState(0);
+
+	useEffect(() => {
+		let uncertaintyParam = '';
+
+		if (uncertainty) {
+			uncertaintyParam = ';u=' + uncertainty;
+		}
+
+		onDataUpdate('geo:' + lat + ',' + lng + uncertaintyParam);
+	}, [lat, lng, uncertainty]);
+
+	return <>
+		<label>
+			Latitude
+			<input type="number" value={lat} min="-90" max="90" step="0.000001" onInput={(e) => setLat(e.target.valueAsNumber)} />
+		</label>
+		<label>
+			Longitude
+			<input type="number" value={lng} min="-180" max="180" step="0.000001" onInput={(e) => setLng(e.target.valueAsNumber)} />
+		</label>
+		<label>
+			Uncertainty
+			<input type="number" value={uncertainty} step="1" min="0" onInput={(e) => setUncertainty(e.target.valueAsNumber)} />
+		</label>
+	</>
+}
+
+<QrCodeEditor
+	renderForm={(onDataUpdate) => <GeoForm onDataUpdate={onDataUpdate} />}
+/>
+
+Specialized apps can also read Bitcoin addresses
+
+export function BitcoinForm({onDataUpdate}) {
+	const [address, setAddress] = useState('175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W');
+	const [amount, setAmount] = useState('');
+	const [label, setLabel] = useState('');
+	const [message, setMessage] = useState('');
+
+	useEffect(() => {
+		let params = new URLSearchParams();
+
+		if (amount) {
+			params.append('amount', amount)
+		}
+
+		if (label) {
+			params.append('label', label)
+		}
+
+		if (message) {
+			params.append('message', message)
+		}
+
+		onDataUpdate('bitcoin:' + address + (params.size ? '?' + params.toString() : ''));
+	}, [address, amount, label, message]);
+
+	return <>
+		<label>
+			Address
+			<input type="text" value={address} onInput={(e) => setAddress(e.target.value)} />
+		</label>
+		<label>
+			Amount
+			<input type="number" value={amount} min="0" onInput={(e) => setAmount(e.target.valueAsNumber)} />
+			BTC
+		</label>
+		<label>
+			Label
+			<input type="text" value={label} onInput={(e) => setLabel(e.target.value)} />
+		</label>
+		<label>
+			Message
+			<input type="text" value={message} onInput={(e) => setMessage(e.target.value)} />
+		</label>
+	</>
+}
+
+<QrCodeEditor
+	renderForm={(onDataUpdate) => <BitcoinForm onDataUpdate={onDataUpdate} />}
+/>
+
+and authenticator keys.
+
+[breakdown of authenticator link]
+
+But thats not all, QR Codes can also contain more kinds of data.
+
+## Sharing contact information
+
+Maybe a phone number or an email address isn't enough. Sometimes you want to share all of the details at once, enter the VCARD.
+
+VCARD is a format for sharing contact information thats been in use since the 90s. VCARDs can contain names, addresses, telephone nubmers, email addresses, photos, and more.
+
+export function VcardForm({onDataUpdate}) {
+	const [fn, setFn] = useState('Alex Doe');
+	// ADR
+	// ANNIVERSARY
+	const [bday, setBday] = useState(null);
+	// CALADRURI
+	// CALURI
+	// CATEGORIES
+	// CLIENTPIDMAP
+	const [email, setEmail] = useState('');
+	// FBURL
+	// FN
+	// GENDER
+	const [geo, setGeo] = useState('');
+	// IMPP
+	// KEY
+	// KIND
+	// LANG
+	// LOGO
+	// MEMBER
+	// N
+	const [nickname, setNickname] = useState('');
+	// NOTE
+	// ORG
+	// PHOTO
+	// PRODID
+	// RELATED
+	// REV
+	// ROLE
+	// SOUND
+	// SOURCE
+	// TEL
+	// TITLE
+	// TZ
+	// UID
+	const [url, setUrl] = useState('');
+
+	useEffect(() => {
+		const card = {
+			FN: fn,
+			EMAIL: email,
+			GEO: geo,
+			URL: url,
+			BDAY: vdate(bday),
+			NICKNAME: nickname
+		};
+		let properties = ''
+
+		for (const key of Object.keys(card)) {
+			if (card[key]) {
+				properties += key + ':' + card[key] + '\n';
+			}
+		}
+
+		onDataUpdate(`BEGIN:VCARD
+VERSION:4.0
+${properties}END:VCARD
+`);
+	}, [fn, email, geo, url, bday, nickname]);
+
+	return <>
+		<label>
+			Full Name:
+			<input type="text" required value={fn} onInput={(e) => setFn(e.target.value)} />
+		</label>
+		<label>
+			Nickname:
+			<input type="text" value={nickname} onInput={(e) => setNickname(e.target.value)} />
+		</label>
+		<label>
+			Email:
+			<input type="email" value={email} onInput={(e) => setEmail(e.target.value)} />
+		</label>
+		<label>
+			Birthday:
+			<input type="date" value={bday !== null ? bday.toISOString().substring(0, 10) : ''} onInput={(e) => setBday(e.target.valueAsDate)} />
+		</label>
+		<GeoForm onDataUpdate={setGeo} />
+		<UrlForm onDataUpdate={setUrl} />
+	</>
+}
+
+<QrCodeEditor
+	renderForm={(onDataUpdate) => <VcardForm onDataUpdate={onDataUpdate} />}
+/>
+
+## Sharing events
+
+VCARD's cousin, VCALENDAR, is a format for sharing events. If you've ever been to a meeting you've probably used VCALENDAR. A VCALENDAR invite contains all of the who, what, when, where, and why needed for your meeting.
+
+
+export function VcalForm({onDataUpdate}) {
+	const [summary, setSummary] = useState('International Pizza Day');
+	const [description, setDescription] = useState('');
+	const [dtstart, setDtstart] = useState(null);
+	const [duration, setDuration] = useState(0);
+
+	useEffect(() => {
+		const card = {
+			SUMMARY: summary,
+			DESCRIPTION: description,
+			DTSTART: vdatetime(dtstart),
+		};
+		let properties = ''
+
+		if (dtstart) {
+			card.DTEND = vdatetime(new Date(dtstart.getTime() + 60000 * duration));
+		}
+
+		for (const key of Object.keys(card)) {
+			if (card[key]) {
+				properties += key + ':' + card[key] + '\n';
+			}
+		}
+
+		onDataUpdate(`BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//aaronasachimp/blog//NONSGML v1.0//EN
+BEGIN:VEVENT
+DTSTAMP:${ vdatetime(new Date()) }
+${properties}END:VEVENT
+END:VCALENDAR
+`);
+	}, [summary, description, dtstart, duration]);
+
+	return <>
+		<label>
+			Summary:
+			<input type="text" required value={summary} onInput={(e) => setSummary(e.target.value)} />
+		</label>
+		<label>
+			Description:
+			<textarea type="text" value={description} onInput={(e) => setDescription(e.target.value)}>
+			</textarea>
+		</label>
+
+		<label>
+			Start Date:
+			<input type="datetime-local" required value={dtstart !== null ? dtstart.toISOString() : ''} onInput={(e) => setDtstart(e.target.valueAsDate)} />
+		</label>
+		<label>
+			Duration:
+			<input type="number" step="15" value={duration} onInput={(e) => setDuration(e.target.valueAsNumber)} /> minutes
+		</label>
+	</>
+}
+
+<QrCodeEditor
+	renderForm={(onDataUpdate) => <VcalForm onDataUpdate={onDataUpdate} />}
+/>
+
+## WIFI: sharing internet access information
+
+In IT there is one eternal burning question that no one has an answer for: "Whats the WIFI password?" Instead of writing on a white board you can put it in a QR Code.
+
+export function WifiForm({onDataUpdate}) {
+	const [ssid, setSsid] = useState('MyWifiNetwork');
+	const [password, setPassword] = useState('supersecurepassword');
+	const [hidden, setHidden] = useState(false);
+
+	useEffect(() => {
+		onDataUpdate(`WIFI:S:${ ssid };T:WPA;P:${ password };${ hidden ? 'H:' + hidden : '' };`);
+	}, [ssid, password, hidden]);
+
+	return <>
+		<label>
+			SSID:
+			<input type="text" required value={ssid} onInput={(e) => setSsid(e.target.value)} />
+		</label>
+		<label>
+			Password:
+			<input type="text" required value={password} onInput={(e) => setPassword(e.target.value)} />
+		</label>
+		<label>
+			Hidden:
+			<input type="checkbox" required value={hidden} onInput={(e) => setHidden(e.target.checked)} />
+		</label>
+	</>
+}
+
+<QrCodeEditor
+	renderForm={(onDataUpdate) => <WifiForm onDataUpdate={onDataUpdate} />}
+/>
+
+## Wrap up
+
+QR Codes are becoming more and more common and can be used to share all kinds of data.

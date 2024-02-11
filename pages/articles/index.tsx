@@ -22,6 +22,11 @@ export default function Page() {
         title="Do side effects prevent tree shaking?"
         blurb="Shaking things up with a deep dive into module bundling."
         href="/articles/side-effects-and-tree-shaking" />
+
+      <HomeArticleTile
+        title="What can you put in a QR&nbsp;Code?"
+        blurb="Connect real world to the digital world using QR Codes."
+        href="/articles/qr-codes" />
     </HomeSection>
     <PageFooter />
   </>
