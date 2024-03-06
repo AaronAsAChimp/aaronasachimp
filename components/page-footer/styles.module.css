@@ -1,5 +1,4 @@
 .page-footer {
-	width: var(--page-width);
 	box-sizing: border-box;
 	padding: 3em;
 	color: white;
@@ -8,6 +7,7 @@
 }
 
 .page-footer-inner {
+	width: var(--page-width);
 	display: grid;
 	grid-template-columns: 1fr auto;
 	margin: 0 auto;
